@@ -1,5 +1,5 @@
 package Tasam.apiserver.domain;
 
-public enum reservationStatus {
+public enum ReservationStatus {
     POSSIBLE,IMMINENT,DEADLINE
 }

@@ -4,16 +4,13 @@ package Tasam.apiserver.domain;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
 public class User {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     public Long id;
 
@@ -23,6 +20,7 @@ public class User {
     private String name;
     private String schoolNum;
     private String phoneNum;
+    @Enumerated(EnumType.STRING)
     private Sex sex;
 
 
