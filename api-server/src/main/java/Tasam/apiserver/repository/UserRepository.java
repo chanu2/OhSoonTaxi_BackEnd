@@ -13,11 +13,10 @@ import javax.persistence.PersistenceContext;
 public class UserRepository {
 
 
-    @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
 
     public User findByUid(String uid){
-        return em.createQuery("select u from User u where u.uid = :uid", User.class).setParameter("uid",uid).getSingleResult();
+        return em.createQuery("select u from User u where u.uid = :uid ", User.class).setParameter("uid",uid).getSingleResult();
     }
 }

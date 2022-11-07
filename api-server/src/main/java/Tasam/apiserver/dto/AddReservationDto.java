@@ -3,7 +3,9 @@ package Tasam.apiserver.dto;
 
 import Tasam.apiserver.domain.ReservationStatus;
 import Tasam.apiserver.domain.Sex;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
+@NoArgsConstructor
 public class AddReservationDto {
 
     private LocalDate reserveDate;
@@ -38,4 +41,7 @@ public class AddReservationDto {
         this.challengeWord = challengeWord;
         this.countersignWord = countersignWord;
     }
+
+
+
 }

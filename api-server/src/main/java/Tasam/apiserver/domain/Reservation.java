@@ -1,8 +1,10 @@
 package Tasam.apiserver.domain;
 
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,10 +51,9 @@ public class Reservation {
 
 
     @Builder
-    public Reservation(User user, List<Participation> participations, LocalDate reserveDate, LocalTime startT, LocalDateTime writeT, String title, String startPlace, String destination,
+    public Reservation(User user, LocalDate reserveDate, LocalTime startT, LocalDateTime writeT, String title, String startPlace, String destination,
                        Sex sex, ReservationStatus reservationStatus, Integer passengerNum, Integer currentNum, String challengeWord, String countersignWord) {
         this.user=user;
-        this.participations=participations;
         this.reserveDate = reserveDate;
         this.startT = startT;
         this.writeT = writeT;
@@ -65,10 +67,22 @@ public class Reservation {
         this.challengeWord = challengeWord;
         this.countersignWord = countersignWord;
 
-        //==연간 관계 메서드==//
-        Participation.builder().reservation(this).build();
+    }
+
+    //== 연관 관계 메서드==//
+
+    public void addParticipation(Participation participation){
+        participations.add(participation);
+        participation.mappingReservation(this);
 
     }
+
+    public void subParticipation(Participation participation){
+        participations.remove(participation);
+        participation.mappingReservation(this);
+    }
+
+
 
     //==생성메서드==//
     public static Reservation createReservation(User user,LocalDate reserveDate, LocalTime startT, String title, String startPlace, String destination,
@@ -90,4 +104,22 @@ public class Reservation {
                 .build();
 
     }
+
+    // 이름 변경
+    public void changeTitle(String title) {
+        this.title=title;
+    }
+
+    //인원 추가
+    public void addCurrentNum(){this.currentNum++;}
+
+
+    //인원 빼기
+    public void subtractCurrentNum(){
+        this.currentNum--;
+    }
+
+
+
+
 }

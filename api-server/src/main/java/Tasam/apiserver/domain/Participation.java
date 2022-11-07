@@ -1,13 +1,16 @@
 package Tasam.apiserver.domain;
 
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Participation {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +32,12 @@ public class Participation {
     public Participation( User user, Reservation reservation) {
         this.user = user;
         this.reservation = reservation;
+        //this.reservation.getParticipations().add(this);
 
     }
 
 
-    //==생성 메서드==//
-    public static Participation createParticipation(User user,Reservation reservation){
-        return builder()
-                .user(user)
-                .reservation(reservation)
-                .build();
+    public void mappingReservation(Reservation reservation) {
+        this.reservation=reservation;
     }
-
 }
