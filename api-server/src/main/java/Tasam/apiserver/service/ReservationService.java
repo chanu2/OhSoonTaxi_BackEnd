@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,7 @@ public class ReservationService {
     //  원하는 날짜 시간 정렬해서 택시방 보여 주기
     @Transactional
     public List<ReservationResponseDto> getReservationSortList(LocalDate reserveDate){
+
         List<Reservation> list = reservationRepository.findBySortDate(reserveDate);
 
         return list.stream().map( r -> new ReservationResponseDto(r)).collect(Collectors.toList());
@@ -93,6 +95,8 @@ public class ReservationService {
 
 
     // 택시방 관련 정보 상세 보여주기
+    //@Transactional
+
 
 
 
