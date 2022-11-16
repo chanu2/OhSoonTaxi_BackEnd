@@ -13,7 +13,7 @@ import java.time.LocalTime;
 public class RequestAddReservationDto {
 
     private LocalDate reserveDate;
-    private LocalTime startT;
+    private LocalTime reserveTime;
 
     private String title;
     private String startPlace;

@@ -1,10 +1,15 @@
 package Tasam.apiserver.domain;
 
 
+import Tasam.apiserver.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@EnableJpaAuditing
+@SpringBootApplication
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation {
@@ -30,8 +38,7 @@ public class Reservation {
     private User user;
 
     private LocalDate reserveDate;
-    private LocalTime startT;
-    private LocalDateTime writeT;
+    private LocalTime reserveTime;
 
     private String title;
     private String startPlace;
@@ -49,14 +56,24 @@ public class Reservation {
     private String challengeWord;
     private String countersignWord;
 
+    private Double startLatitude;
+    private Double startLongitude;
+
+    private Double finishLatitude;
+    private Double finishLongitude;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
 
     @Builder
-    public Reservation(User user, LocalDate reserveDate, LocalTime startT, LocalDateTime writeT, String title, String startPlace, String destination,
-                       Sex sex, ReservationStatus reservationStatus, Integer passengerNum, Integer currentNum, String challengeWord, String countersignWord) {
+    public Reservation(User user, LocalDate reserveDate, LocalTime reserveTime, String title, String startPlace, String destination,
+                       Sex sex, ReservationStatus reservationStatus, Integer passengerNum, Integer currentNum, String challengeWord, String countersignWord, Double startLatitude,
+                       Double startLongitude, Double finishLatitude, Double finishLongitude) {
         this.user=user;
         this.reserveDate = reserveDate;
-        this.startT = startT;
-        this.writeT = writeT;
+        this.reserveTime = reserveTime;
         this.title = title;
         this.startPlace = startPlace;
         this.destination = destination;
@@ -66,6 +83,11 @@ public class Reservation {
         this.currentNum = currentNum;
         this.challengeWord = challengeWord;
         this.countersignWord = countersignWord;
+        this.startLatitude = startLatitude;
+        this.startLongitude = startLongitude;
+        this.finishLatitude = finishLatitude;
+        this.finishLongitude = finishLongitude;
+
 
     }
 
@@ -85,14 +107,14 @@ public class Reservation {
 
 
     //==생성메서드==//
-    public static Reservation createReservation(User user,LocalDate reserveDate, LocalTime startT, String title, String startPlace, String destination,
-                                                Sex sex, Integer passengerNum, String challengeWord, String countersignWord){
+    public static Reservation createReservation(User user,LocalDate reserveDate, LocalTime reserveTime, String title, String startPlace, String destination,
+                                                Sex sex, Integer passengerNum, String challengeWord, String countersignWord,Double startLatitude,
+                                                Double startLongitude, Double finishLatitude,Double finishLongitude){
         return builder()
                 .user(user)
                 .reserveDate(reserveDate)
-                .startT(startT)
+                .reserveTime(reserveTime)
                 .title(title)
-                .writeT(LocalDateTime.now())
                 .startPlace(startPlace)
                 .destination(destination)
                 .reservationStatus(ReservationStatus.POSSIBLE)
@@ -101,6 +123,10 @@ public class Reservation {
                 .currentNum(0)
                 .challengeWord(challengeWord)
                 .countersignWord(countersignWord)
+                .startLatitude(startLatitude)
+                .startLongitude(startLongitude)
+                .finishLatitude(finishLatitude)
+                .finishLongitude(finishLongitude)
                 .build();
 
     }
@@ -117,6 +143,22 @@ public class Reservation {
     //인원 빼기
     public void subtractCurrentNum(){
         this.currentNum--;
+    }
+
+
+    // 참석한 인원에 따라 예약 상태 변경 비지니스로직
+    public void changeReservationStatus(){
+        if(this.passengerNum*0.5 < this.currentNum && this.currentNum < this.passengerNum )  {
+            this.changeReserveStatus(ReservationStatus.IMMINENT);
+        }
+        else if(this.currentNum == this.passengerNum){
+            this.changeReserveStatus(ReservationStatus.DEADLINE);
+        }
+    }
+
+
+    public void changeReserveStatus(ReservationStatus reservationStatus){
+        this.reservationStatus = reservationStatus;
     }
 
 

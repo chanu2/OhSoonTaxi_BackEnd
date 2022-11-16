@@ -18,7 +18,7 @@ import java.time.LocalTime;
 public class AddReservationDto {
 
     private LocalDate reserveDate;
-    private LocalTime startT;
+    private LocalTime reserveTime;
 
     private String title;
     private String startPlace;
@@ -29,6 +29,13 @@ public class AddReservationDto {
     private Integer passengerNum;
     private String challengeWord;
     private String countersignWord;
+
+    private Double startLatitude;
+    private Double startLongitude;
+
+    private Double finishLatitude;
+    private Double finishLongitude;
+
 
 //    public AddReservationDto(LocalDate reserveDate, LocalTime startT, String title, String startPlace, String destination, Sex sex, Integer passengerNum, String challengeWord, String countersignWord) {
 //        this.reserveDate = reserveDate;

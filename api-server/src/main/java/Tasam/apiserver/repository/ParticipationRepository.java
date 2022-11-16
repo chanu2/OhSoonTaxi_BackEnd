@@ -28,8 +28,8 @@ public class ParticipationRepository {
     public Participation findParticipation(Long reserveId,Long userId){
 
         Participation result = em.createQuery("select p from Participation p"+
-                " left join fetch p.user u"+
-                " left join fetch p.reservation r"+
+                " join fetch p.user u"+
+                " join fetch p.reservation r"+
                 " where r.id = :reservationId and u.id = :userId ", Participation.class).setParameter("reservationId", reserveId).setParameter("userId", userId).getSingleResult();
 
         return result;

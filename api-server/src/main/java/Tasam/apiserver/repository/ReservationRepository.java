@@ -33,9 +33,10 @@ public class ReservationRepository {
 
 
     public List<Reservation> findBySortDate(LocalDate day){
-        return em.createQuery("select r from Reservation r where r.reserveDate = :day order by r.startT ", Reservation.class)
+        return em.createQuery("select r from Reservation r where r.reserveDate = :day order by r.reserveTime ", Reservation.class)
                 .setParameter("day",day).getResultList();
     }
+
 
 
 

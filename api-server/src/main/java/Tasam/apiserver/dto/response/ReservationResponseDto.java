@@ -14,7 +14,7 @@ public class ReservationResponseDto {
 
     public Long id;
 
-    private LocalTime startT;
+    private LocalTime reserveTime;
 
 
     private String title;
@@ -28,7 +28,7 @@ public class ReservationResponseDto {
 
     public ReservationResponseDto(Reservation reservation) {
         this.id = reservation.getId();
-        this.startT = reservation.getStartT();
+        this. reserveTime = reservation.getReserveTime();
         this.title = reservation.getTitle();
         this.startPlace = reservation.getStartPlace();
         this.destination = reservation.getDestination();

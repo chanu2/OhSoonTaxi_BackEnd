@@ -1,6 +1,7 @@
 package Tasam.apiserver.domain;
 
 
+import Tasam.apiserver.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,12 +27,15 @@ public class Participation {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
+    private Integer seatPosition;
+
 
 
     @Builder
-    public Participation( User user, Reservation reservation) {
+    public Participation( User user, Reservation reservation, Integer seatPosition) {
         this.user = user;
         this.reservation = reservation;
+        this.seatPosition = seatPosition;
         //this.reservation.getParticipations().add(this);
 
     }
