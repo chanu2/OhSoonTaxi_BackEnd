@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,14 +27,31 @@ public class ParticipationRepository {
         return participation;
     }
 
-    public Participation findParticipation(Long reserveId,Long userId){
+//    public Participation findParticipation(Long reserveId,Long userId){
+//
+//        Participation result = em.createQuery("select p from Participation p"+
+//                " join fetch p.user u"+
+//                " join fetch p.reservation r"+
+//                " where r.id = :reservationId and u.id = :userId ", Participation.class).setParameter("reservationId", reserveId).setParameter("userId", userId).getSingleResult();
+//
+//        return result;
+//    }
 
-        Participation result = em.createQuery("select p from Participation p"+
-                " join fetch p.user u"+
-                " join fetch p.reservation r"+
-                " where r.id = :reservationId and u.id = :userId ", Participation.class).setParameter("reservationId", reserveId).setParameter("userId", userId).getSingleResult();
+    public Optional<Participation> findParticipation(Long reserveId, Long userId){
 
-        return result;
+        Optional participation = null;
+
+        try{
+            participation = Optional.ofNullable(em.createQuery("select p from Participation p"+
+                    " join fetch p.user u"+
+                    " join fetch p.reservation r"+
+                    " where r.id = :reservationId and u.id = :userId ", Participation.class).setParameter("reservationId", reserveId).setParameter("userId", userId).getSingleResult());
+        }catch (NoResultException e){
+            participation = Optional.empty();
+        }finally {
+            return participation;
+        }
+
     }
 
     public void delete(Long id){

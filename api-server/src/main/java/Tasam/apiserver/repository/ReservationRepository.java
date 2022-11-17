@@ -38,6 +38,20 @@ public class ReservationRepository {
     }
 
 
+    public List<Reservation> findParticipatedReserve(String userUid){
+        return em.createQuery("select distinct r from Reservation r"+
+                " join fetch r.participations p"+
+                " join fetch p.user u"+
+                " where u.uid =: userUid ",Reservation.class).setParameter("userUid",userUid).getResultList();
+    }
+
+
+
+//
+//     return em.createQuery("select distinct r from Reservation r"+
+//             " join fetch r.participations p"+
+//             " join fetch p.user u"+
+//             " where u.uid = :userUid ",Reservation.class).setParameter("userUid",userUid).getResultList();
 
 
 

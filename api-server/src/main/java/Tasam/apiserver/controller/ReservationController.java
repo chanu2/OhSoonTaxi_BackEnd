@@ -1,7 +1,9 @@
 package Tasam.apiserver.controller;
 
 
+import Tasam.apiserver.domain.Reservation;
 import Tasam.apiserver.dto.AddReservationDto;
+import Tasam.apiserver.dto.response.ParticipatedReserveResponseDto;
 import Tasam.apiserver.dto.response.ReservationResponseDto;
 import Tasam.apiserver.dto.response.ReserveDetailResponseDto;
 import Tasam.apiserver.response.DefaultRes;
@@ -64,6 +66,22 @@ public class ReservationController {
                 new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, "잘못된 요청", reservationDetail), HttpStatus.OK);
 
     }
+
+    // 내가 참여한 경기 보여주기
+    @GetMapping("/list/my")
+    public ResponseEntity getParticipatedList(@RequestParam(name = "userUid") String userUid){
+
+
+        List<ParticipatedReserveResponseDto> participatedReserveResponseDtoList = reservationService.participatedReservation(userUid);
+
+        return participatedReserveResponseDtoList != null ?
+                new ResponseEntity(DefaultRes.res(StatusCode.OK, "경기 정보 보여주기 완료", participatedReserveResponseDtoList), HttpStatus.OK) :
+                new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, "잘못된 요청", participatedReserveResponseDtoList), HttpStatus.OK);
+
+    }
+
+
+
 
 
 

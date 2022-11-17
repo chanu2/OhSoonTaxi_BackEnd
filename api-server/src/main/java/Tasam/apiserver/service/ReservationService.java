@@ -5,6 +5,7 @@ import Tasam.apiserver.domain.Reservation;
 import Tasam.apiserver.domain.user.User;
 import Tasam.apiserver.dto.AddReservationDto;
 import Tasam.apiserver.dto.UpdateReservationDto;
+import Tasam.apiserver.dto.response.ParticipatedReserveResponseDto;
 import Tasam.apiserver.dto.response.ReservationResponseDto;
 import Tasam.apiserver.dto.response.ReserveDetailResponseDto;
 import Tasam.apiserver.repository.ParticipationRepository;
@@ -106,18 +107,39 @@ public class ReservationService {
         return reserveDetailResponseDto;
 
 
-//                (findReservation.getId(),findReservation.getTitle(),findReservation.getReserveDate(),
-//                        findReservation.getReserveTime(),findReservation.getStartPlace(),findReservation.getDestination(),findReservation.getSex(),findReservation.getPassengerNum(),
-//                        findReservation.getChallengeWord(),findReservation.getCountersignWord(),findReservation.getCurrentNum(),findReservation.getStartLatitude(),findReservation.getStartLongitude(),
-//                        findReservation.getFinishLatitude(),findReservation.getFinishLongitude(),findReservation.getReservationStatus(),)
+    }
 
+//
+//    // 내가 작성한 게시글
+//    @Transactional
+//    public ReserveDetailResponseDto getReservationDetail (Long reservationId){
+//
+//
+//        Reservation findReservation = reservationRepository.findOne(reservationId);
+//        ReserveDetailResponseDto reserveDetailResponseDto = new ReserveDetailResponseDto(findReservation);
+//
+//        return reserveDetailResponseDto;
+//
+//
+//    }
+
+    // 내가 참여한 게시글 조회
+    @Transactional
+    public List<ParticipatedReserveResponseDto> participatedReservation(String userUid){ //
+
+        List<Reservation> participatedReserve = reservationRepository.findParticipatedReserve(userUid);
+
+        return participatedReserve.stream().map( r -> new ParticipatedReserveResponseDto(r)).collect(Collectors.toList());
 
     }
 
 
 
 
-    //@Transactional
+
+
+
+
 
 
 

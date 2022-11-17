@@ -5,12 +5,16 @@ import Tasam.apiserver.domain.Participation;
 import Tasam.apiserver.domain.Reservation;
 import Tasam.apiserver.domain.user.User;
 import Tasam.apiserver.dto.AddParticipationDto;
+import Tasam.apiserver.dto.response.ReserveDetailResponseDto;
 import Tasam.apiserver.repository.ParticipationRepository;
 import Tasam.apiserver.repository.ReservationRepository;
 import Tasam.apiserver.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -59,7 +63,7 @@ public class ParticipationService {
     public Long deleteParticipation(Long reservationId,String userUid){
 
         User findUser = userRepository.findByUid(userUid).get();
-        Participation participation = participationRepository.findParticipation(reservationId, findUser.getId());
+        Participation participation = participationRepository.findParticipation(reservationId, findUser.getId()).get();
 
         participation.getReservation().subtractCurrentNum();
         participation.getReservation().subParticipation(participation);
@@ -73,7 +77,21 @@ public class ParticipationService {
     }
 
 
+    //방에 참여했는지 확인
+    @Transactional
+    public String checkParticipation(Long reservationId,String userUid) {
 
+        Optional<User> user = userRepository.findByUid(userUid);
 
+        Optional<Participation> participation = participationRepository.findParticipation(reservationId, user.get().getId());
+
+        if(participation.isPresent()){
+
+            return "1";
+        }
+        else{
+            return "2";
+        }
+    }
 
 }
