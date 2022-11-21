@@ -69,17 +69,17 @@ public class UserService {
     }
 
 
-//
-//    public Boolean signOut (String refreshToken, String fcmToken, User user) {
-//        if ( !fcmTokenRepository.existsByFcmToken(fcmToken) || !refreshTokenRepository.existsByRefreshToken(refreshToken)) return false;
-//
-//        fcmTokenRepository.deleteByFcmToken(fcmToken);
-//        refreshTokenRepository.deleteByRefreshToken(refreshToken);
-//
-//        logger.info(user.getUid() + " (id : " + user.getId() + ") logout");
-//        return true;
-//    }
-//
+    // 로그아웃
+    public Boolean signOut (String refreshToken,User user) {
+        if(!refreshTokenRepository.existsByRefreshToken(refreshToken)) return false;
+
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+
+        logger.info(user.getUid() + " (id : " + user.getId() + ") logout");
+
+        return true;
+    }
+
 
     public Boolean checkUnique(String uid) {
         Boolean result = userRepository.existsByUid(uid);  // 아이디가 존재하면 true

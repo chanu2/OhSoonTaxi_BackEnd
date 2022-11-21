@@ -2,33 +2,30 @@ package Tasam.apiserver.controller;
 
 
 import Tasam.apiserver.dto.AddParticipationDto;
-import Tasam.apiserver.dto.response.ParticipatedReserveResponseDto;
 import Tasam.apiserver.response.DefaultRes;
 import Tasam.apiserver.response.StatusCode;
 import Tasam.apiserver.service.ParticipationService;
+import Tasam.apiserver.service.ParticipationService1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/participation")
-public class ParticipationController {
+public class ParticipationController1 {
 
-    private final ParticipationService participationService;
+    private final ParticipationService1 participationService1;
 
 
     //참여 하기
 
-    @PostMapping("/add")
+    @PostMapping("/add1")
     public ResponseEntity addParticipate(@RequestBody AddParticipationDto addParticipationDto,@RequestParam(name = "userUid") String userUid){
-        Long participationId = participationService.addParticipation(addParticipationDto, userUid);
+        Long participationId = participationService1.addParticipation(addParticipationDto, userUid);
 
         return participationId != null ?
                 new ResponseEntity(DefaultRes.res(StatusCode.OK, "경기 참여 완료"), HttpStatus.OK) :
@@ -37,10 +34,10 @@ public class ParticipationController {
 
 
     // 참여 취소
-    @DeleteMapping("/delete/{reservationId}")
+    @DeleteMapping("/delete1/{reservationId}")
     public ResponseEntity deleteParticipation(@PathVariable Long reservationId,@RequestParam(name = "userUid") String userUid){
 
-        Long participationId = participationService.deleteParticipation(reservationId, userUid);
+        Long participationId = participationService1.deleteParticipation(reservationId, userUid);
 
 
         return participationId != null ?
@@ -50,12 +47,12 @@ public class ParticipationController {
     }
 
     // 참여상태 확인
-    @GetMapping("/check/{reservationId}")
+    @GetMapping("/check1/{reservationId}")
     public ResponseEntity checkParticipation(@PathVariable Long reservationId,@RequestParam(name = "userUid") String userUid){
 
 
 
-        String status = participationService.checkParticipation(reservationId, userUid);
+        String status = participationService1.checkParticipation(reservationId, userUid);
 
 
         switch (status){

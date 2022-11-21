@@ -6,7 +6,6 @@ import Tasam.apiserver.domain.Reservation;
 import Tasam.apiserver.domain.ReservationStatus;
 import Tasam.apiserver.domain.user.User;
 import Tasam.apiserver.dto.AddParticipationDto;
-import Tasam.apiserver.dto.response.ReserveDetailResponseDto;
 import Tasam.apiserver.repository.ParticipationRepository;
 import Tasam.apiserver.repository.ParticipationRepository1;
 import Tasam.apiserver.repository.ReservationRepository;
@@ -15,24 +14,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ParticipationService {
+public class ParticipationService1 {
 
 
     private final UserRepository userRepository;
 
     private final ReservationRepository reservationRepository;
 
-    private final ParticipationRepository participationRepository;
 
+    private final ParticipationRepository1 participationRepository1;
 
 
     //참여하기
@@ -42,7 +38,7 @@ public class ParticipationService {
         Reservation findReservation = reservationRepository.findOne(addParticipationDto.getReservationId());
 
 
-        Participation participation = participationRepository.save(Participation.builder()
+        Participation participation = participationRepository1.save(Participation.builder()
                 .user(findUser)
                 .reservation(findReservation)
                 .seatPosition(addParticipationDto.getSeatPosition())
@@ -67,13 +63,13 @@ public class ParticipationService {
     public Long deleteParticipation(Long reservationId, String userUid) {
 
         User findUser = userRepository.findByUid(userUid).get();
-        Participation participation = participationRepository.findParticipation(reservationId, findUser.getId()).get();
+        Participation participation = participationRepository1.findParticipation(reservationId, findUser.getId());
 
         participation.getReservation().subtractCurrentNum();
         participation.getReservation().subParticipation(participation);
         participation.getReservation().changeReservationStatus();
 
-        participationRepository.delete(participation.getId());
+        participationRepository1.deleteById(participation.getId());
 
 
         return participation.getId();
@@ -89,12 +85,14 @@ public class ParticipationService {
 
         Reservation findReservation = reservationRepository.findOne(reservationId);
 
-        Optional<Participation> participation = participationRepository.findParticipation(reservationId, user.get().getId());
+        Participation participation = participationRepository1.findParticipation(reservationId, user.get().getId());
 
         LocalDateTime nowDateTime = LocalDateTime.now();
         LocalDateTime reserveDateTime = LocalDateTime.of(findReservation.getReserveDate(), findReservation.getReserveTime());
 
-        if (participation.isPresent()) {
+
+
+        if (participation!=null) {
 
             if (nowDateTime.isAfter(reserveDateTime.minusMinutes(30)) && nowDateTime.isBefore(reserveDateTime)) {
                 return "1";

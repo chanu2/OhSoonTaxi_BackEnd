@@ -75,4 +75,17 @@ public class UserController {
         else return new ResponseEntity(DefaultRes.res(StatusCode.OK, "사용자 로그인 완료", "ROLE_USER"), HttpStatus.OK);
     }
 
+
+    //로그아웃
+    @PostMapping("/signOut")
+    public ResponseEntity signOut(@RequestHeader("RefreshToken") String refreshToken, @RequestParam(name = "userUid")String userUid) {
+        refreshToken = refreshToken.substring(7);
+        User user = userService.findUserByUid(userUid);
+        Boolean existAndOut = userService.signOut(refreshToken,user);
+
+        return existAndOut ?
+                new ResponseEntity(DefaultRes.res(StatusCode.OK, "로그아웃 완료"), HttpStatus.OK):
+                new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST, "잘못된 요청"), HttpStatus.OK);
+    }
+
 }

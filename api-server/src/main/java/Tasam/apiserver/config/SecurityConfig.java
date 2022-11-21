@@ -38,7 +38,7 @@ public class SecurityConfig{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 X
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/signUp", "/user/signIn").permitAll()  // 이 api를 허락한다
+                .antMatchers("/user/signUp", "/user/signIn","/user/checkUnique").permitAll()  // 이 api를 허락한다
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic().disable() // httpBaic 로그인 방식 끄기

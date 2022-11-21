@@ -6,8 +6,7 @@ import Tasam.apiserver.domain.user.User;
 import Tasam.apiserver.dto.AddReservationDto;
 import Tasam.apiserver.dto.UpdateReservationDto;
 import Tasam.apiserver.dto.response.*;
-import Tasam.apiserver.repository.ParticipationRepository;
-import Tasam.apiserver.repository.ReservationRepository;
+import Tasam.apiserver.repository.ReservationRepository1;
 import Tasam.apiserver.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ReservationService {
+public class ReservationService1 {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationRepository1 reservationRepository;
 
     private final UserRepository userRepository;
 
@@ -54,9 +53,9 @@ public class ReservationService {
 
         User user = userRepository.findByUid(userUid).get();
 
-        if(reservationRepository.findOne(reservationId).getUser()!=user)return null;
+        if(reservationRepository.findById(reservationId).get().getUser()!=user)return null;
 
-        reservationRepository.delete(reservationId);
+        reservationRepository.deleteById(reservationId);
 
         return reservationId;
 
@@ -67,21 +66,24 @@ public class ReservationService {
     @Transactional
     public Long updateReservation(UpdateReservationDto updateReservationDto, String userUid)throws IOException{
         User user = userRepository.findByUid(userUid).get();
-        Reservation reservation = reservationRepository.findOne(updateReservationDto.getId());
-        if(reservation.getUser()!=user) return null;
+        Optional<Reservation> reservation = reservationRepository.findById(updateReservationDto.getId());
+        if(reservation.get().getUser()!=user) return null;
 
-        reservation.changeTitle(updateReservationDto.getTitle());
+        reservation.get().changeTitle(updateReservationDto.getTitle());
 
-        return reservation.getId();
+        return reservation.get().getId();
 
 
     }
 
     // 키워드 검색
-//    @Transactional
-//    public List<SearchResponseDto> getSearchReservation(String keyWord){
-//        reservationRepository.findBy
-//    }
+    @Transactional
+    public List<SearchResponseDto> getSearchReservation(String keyWord){
+        List<Reservation> reservation = reservationRepository.findByTitleContaining(keyWord);
+
+        return reservation.stream().map(r -> new SearchResponseDto(r)).collect(Collectors.toList());
+
+    }
 
 
 
@@ -102,7 +104,7 @@ public class ReservationService {
     public ReserveDetailResponseDto getReservationDetail (Long reservationId){
 
 
-        Reservation findReservation = reservationRepository.findOne(reservationId);
+        Reservation findReservation = reservationRepository.findById(reservationId).get();
         ReserveDetailResponseDto reserveDetailResponseDto = new ReserveDetailResponseDto(findReservation);
 
         return reserveDetailResponseDto;
@@ -117,7 +119,7 @@ public class ReservationService {
 
         Optional<User> user = userRepository.findByUid(userUid);
 
-        List<Reservation> reservations = reservationRepository.reservationById(user.get().getId());
+        List<Reservation> reservations = reservationRepository.reservedByMe(user.get().getId());
 
 
         return reservations.stream().map(r -> new ReservedByMeResponseDto(r)).collect(Collectors.toList());
@@ -137,6 +139,16 @@ public class ReservationService {
     }
 
     // 암구호 보여주기
+
+    @Transactional
+    public PassphraseResponseDto getPassphrase(Long reservationId){
+
+        Reservation reservation = reservationRepository.findById(reservationId).get();
+
+        PassphraseResponseDto passphraseResponseDto = new PassphraseResponseDto(reservation);
+
+        return passphraseResponseDto;
+    }
 
 
 

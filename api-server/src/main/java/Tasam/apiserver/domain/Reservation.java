@@ -2,10 +2,7 @@ package Tasam.apiserver.domain;
 
 
 import Tasam.apiserver.domain.user.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -87,7 +84,6 @@ public class Reservation {
         this.startLongitude = startLongitude;
         this.finishLatitude = finishLatitude;
         this.finishLongitude = finishLongitude;
-
 
     }
 
