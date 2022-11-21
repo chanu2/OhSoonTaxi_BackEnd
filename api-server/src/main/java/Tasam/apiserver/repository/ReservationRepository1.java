@@ -47,7 +47,4 @@ public interface ReservationRepository1 extends JpaRepository<Reservation,Long> 
 
 
 
-
-
-
 }

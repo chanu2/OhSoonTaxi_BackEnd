@@ -1,9 +1,13 @@
 package Tasam.apiserver.controller;
 
 
+import Tasam.apiserver.domain.Participation;
+import Tasam.apiserver.domain.user.User;
 import Tasam.apiserver.dto.AddReservationDto;
 import Tasam.apiserver.dto.UpdateReservationDto;
 import Tasam.apiserver.dto.response.*;
+import Tasam.apiserver.repository.ParticipationRepository1;
+import Tasam.apiserver.repository.user.UserRepository;
 import Tasam.apiserver.response.DefaultRes;
 import Tasam.apiserver.response.StatusCode;
 import Tasam.apiserver.service.ReservationService;
@@ -19,6 +23,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +31,10 @@ import java.util.List;
 public class ReservationController1 {
 
     private final ReservationService1 reservationService;
+
+    private final UserRepository userRepository;
+
+    private final ParticipationRepository1 participationRepository;
 
 
     // 경기 생성
@@ -51,7 +60,7 @@ public class ReservationController1 {
     }
 
     //방 정보 업데이트
-    @PostMapping("reserves1/update")
+    @PostMapping("/update")
     public ResponseEntity updateReservation(@RequestBody UpdateReservationDto updateReservationDto,@RequestParam(name = "userUid") String userUid) throws IOException{
 
         Long reservationId = reservationService.updateReservation(updateReservationDto, userUid);
@@ -130,9 +139,10 @@ public class ReservationController1 {
 
     //암구호 보여주기
     @GetMapping("/passphrase/{reservationId}")
-    public ResponseEntity getPassphrase(@PathVariable("reservationId") Long reservationId){
+    public ResponseEntity getPassphrase(@PathVariable("reservationId") Long reservationId,@RequestParam(name = "userUid") String userUid){
 
-        PassphraseResponseDto passphrase = reservationService.getPassphrase(reservationId);
+
+        PassphraseResponseDto passphrase = reservationService.getPassphrase(reservationId,userUid);
 
         return passphrase != null ?
                 new ResponseEntity(DefaultRes.res(StatusCode.OK, "경기 정보 보여주기 완료", passphrase), HttpStatus.OK) :

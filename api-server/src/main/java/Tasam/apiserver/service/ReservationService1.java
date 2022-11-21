@@ -1,11 +1,13 @@
 package Tasam.apiserver.service;
 
 
+import Tasam.apiserver.domain.Participation;
 import Tasam.apiserver.domain.Reservation;
 import Tasam.apiserver.domain.user.User;
 import Tasam.apiserver.dto.AddReservationDto;
 import Tasam.apiserver.dto.UpdateReservationDto;
 import Tasam.apiserver.dto.response.*;
+import Tasam.apiserver.repository.ParticipationRepository1;
 import Tasam.apiserver.repository.ReservationRepository1;
 import Tasam.apiserver.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ public class ReservationService1 {
     private final ReservationRepository1 reservationRepository;
 
     private final UserRepository userRepository;
+
+    private final ParticipationRepository1 participationRepository;
 
 
 
@@ -141,7 +145,7 @@ public class ReservationService1 {
     // 암구호 보여주기
 
     @Transactional
-    public PassphraseResponseDto getPassphrase(Long reservationId){
+    public PassphraseResponseDto getPassphrase(Long reservationId, String userUid){
 
         Reservation reservation = reservationRepository.findById(reservationId).get();
 
